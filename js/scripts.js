@@ -121,16 +121,36 @@ var mapevents = {
             alert("Geocode was not successful for the following reason: " + status);
           }
         });
-    }
-}
+    },
+    
+    mapEventListeners: function() {
+        
+        //Wait for map to load
+        var listenerIdle = google.maps.event.addListenerOnce(map, 'idle',
+            function() {
+                //TODO
+            }
+        );
+        
+        var listenerDragEnd = google.maps.event.addListener(map, 'dragend', 
+            function() {
+                //TODO
+            }
+        );
+
+        var listenerZoomChanged = google.maps.event.addListener(map, 'zoom_changed',
+            function() {
+                //TODO
+            }
+        );
+        
+    },
+};
 
 //Intialize the map
 mapevents.init();
 
-//Wait for map to load
-//google.maps.event.addListenerOnce(map, 'idle', function() {
-//    
-//});
+
 
 //Trigger an event
 //google.maps.event.trigger(marker, 'click');
