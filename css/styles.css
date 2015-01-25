@@ -1,13 +1,5 @@
-html, body {
+html, body, #map {
     height: 100%;
     margin: 0px;
     padding: 0px
-}
-
-/*Set to full screen*/
-#map {
-        
-    height: 100%;
-    margin: 0px;
-    padding: 0px    
 }
