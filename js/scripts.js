@@ -5,12 +5,22 @@ var mapevents = {
     
     //Init function
     init: function() {        
+        
+        //Load the map on load
         google.maps.event.addDomListener(window, 'load', this.loadMap());
+        
+        //Add the event listeners
+        this.mapEventListeners();
+       
     },
     
     //Function run on DOM load
     loadMap: function() {
-
+         
+        //Get the location to display the coordinates
+        this.lat = document.getElementById("latcoords");
+        this.lng = document.getElementById("loncoords");
+        
         //Set the map options
         var mapOptions = {
 
@@ -66,6 +76,9 @@ var mapevents = {
         //Examples
         var newMarker = this.addMarker();
         this.addInfoWindow(newMarker);
+        
+        //Update the lat/lng on load of the map center
+        this.updateCurrentLatLng(map.getCenter());
 
     },
 
@@ -95,8 +108,9 @@ var mapevents = {
     
     addInfoWindow: function(marker) {
 
-        var contentString = '<div id="infowindowcontent">'+
+        var contentString = '<div class="infowindowcontent">'+
             '<h1>Title</h1>'+
+            '<div class="infowindowaddress">Address</div>'+
             '</div>';
 
         var infowindow = new google.maps.InfoWindow({
@@ -108,43 +122,65 @@ var mapevents = {
         });
     },
     
-    geoCodeAddress: function(address) {
-        
-        geocoder.geocode( { 'address': address}, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-            map.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location
-            });
-          } else {
-            alert("Geocode was not successful for the following reason: " + status);
-          }
-        });
-    },
+//    geoCodeAddress: function(address) {
+//        
+//        geocoder.geocode( { 'address': address}, function(results, status) {
+//          if (status == google.maps.GeocoderStatus.OK) {
+//            map.setCenter(results[0].geometry.location);
+//            var marker = new google.maps.Marker({
+//                map: map,
+//                position: results[0].geometry.location
+//            });
+//          } else {
+//            alert("Geocode was not successful for the following reason: " + status);
+//          }
+//        });
+//    },
     
     mapEventListeners: function() {
         
-        //Wait for map to load
-        var listenerIdle = google.maps.event.addListenerOnce(map, 'idle',
-            function() {
-                //TODO
-            }
-        );
+        var that = this;
         
-        var listenerDragEnd = google.maps.event.addListener(map, 'dragend', 
-            function() {
-                //TODO
-            }
-        );
-
-        var listenerZoomChanged = google.maps.event.addListener(map, 'zoom_changed',
-            function() {
-                //TODO
+        //Wait for map to load
+//        var listenerIdle = google.maps.event.addListenerOnce(map, 'idle',
+//            function() {
+//                //TODO
+//            }
+//        );
+//        
+//        var listenerDragEnd = google.maps.event.addListener(map, 'dragend', 
+//            function() {
+//                //TODO
+//            }
+//        );
+//
+//        var listenerZoomChanged = google.maps.event.addListener(map, 'zoom_changed',
+//            function() {
+//                //TODO
+//            }
+//        );
+        
+        
+        
+        /* Mouse move updates the coordinates */
+        var mouseMoveChanged = google.maps.event.addListener(map, 'mousemove',
+            function(event) {            
+                
+                //Update the coordinates
+                that.updateCurrentLatLng(event.latLng);
+                    
             }
         );
         
     },
+    
+    updateCurrentLatLng: function(latLng) {
+        
+        //Update the coordinates
+        this.lat.innerHTML = latLng.lat();
+        this.lng.innerHTML = latLng.lng();
+    }
+    
 };
 
 //Intialize the map
