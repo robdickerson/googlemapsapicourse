@@ -1,49 +1,13 @@
 //Global map variable
 var map;
 
-//Style elements
-var mapStyle = [
-    {
-        "stylers":[
-            {"saturation":-100},
-            {"gamma":1}
-        ]
-    },
-    {
-        "elementType":"labels.text.stroke",
-        "stylers":[
-            {"visibility":"off"}
-        ]
-    },
-    {
-        "featureType":"road",
-        "elementType":"geometry",
-        "stylers":[
-            {"visibility":"simplified"}
-        ]
-    },
-    {
-        "featureType":"water",
-        "stylers":[
-            {"visibility":"on"},
-            {"saturation":50},
-            {"gamma":0},
-            {"hue":"#50a5d1"}
-        ]
-    },
-    {
-        "featureType":"landscape",
-        "elementType":"all",
-        "stylers":[
-            {"color":"#e2e2e2"}
-        ]
-    }
-];
-    
+//Get the location to display the coordinates
+var lat = document.getElementById("latcoords");
+var lng = document.getElementById("loncoords");
 
 //Function run on DOM load
 function loadMap() {
-
+    
     //Set the map options
     var mapOptions = {
 
@@ -86,7 +50,7 @@ function loadMap() {
         },
 
         //Set the map style
-        styles: mapStyle, 
+        styles: shiftWorkerMapStyle, 
     };
 
     //Get the id of the map container div
@@ -94,9 +58,59 @@ function loadMap() {
 
     //Create the map
     map = new google.maps.Map(mapid,mapOptions);
+    
+    //Update the lat/lng on load of the map center
+    updateCurrentLatLng(map.getCenter());
+          
+    //Add the event listeners
+    mapEventListeners();
+       
 
 }
-  
+
+// Add the map event listeners
+function mapEventListeners() {
+    
+    // Mouse move updates the coordinates 
+    var mouseMoveChanged = google.maps.event.addListener(map, 'mousemove',
+        function(event) {            
+        
+            //Update the coordinates
+            updateCurrentLatLng(event.latLng);
+            
+        }
+    );
+    
+            //Wait for map to load
+//        var listenerIdle = google.maps.event.addListenerOnce(map, 'idle',
+//            function() {
+//                //TODO
+//            }
+//        );
+//        
+//        var listenerDragEnd = google.maps.event.addListener(map, 'dragend', 
+//            function() {
+//                //TODO
+//            }
+//        );
+//
+//        var listenerZoomChanged = google.maps.event.addListener(map, 'zoom_changed',
+//            function() {
+//                //TODO
+//            }
+//        );
+    
+}
+
+// Update the position of the mouse in latitude and longitude
+function updateCurrentLatLng(latLng) {
+
+    //Update the coordinates
+    lat.innerHTML = latLng.lat();
+    lng.innerHTML = latLng.lng();
+    
+}
+
 //Load the map
 google.maps.event.addDomListener(window, 'load', loadMap());
        
