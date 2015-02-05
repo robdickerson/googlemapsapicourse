@@ -1,263 +1,31 @@
 //Global map variable
 var map;
 
-var mapevents = {
-    
-    //Init function
-    init: function() {      
-        
-        //Load the map on load
-        google.maps.event.addDomListener(window, 'load', this.loadMap());
-        
-        //Add the event listeners
-        this.mapEventListeners();
+//Function run on DOM load
+function loadMap() {
+
+    //Set the map options
+    var mapOptions = {
+
+        //Zoom on load
+        zoom: 11,
+
+        //Map center
+        center: new google.maps.LatLng(40.748817,-73.985428),
+
+    };
+
+    //Get the id of the map container div
+    var mapid = document.getElementById('map');
+
+    //Create the map
+    map = new google.maps.Map(mapid,mapOptions);
+
+}
+  
+//Load the map
+google.maps.event.addDomListener(window, 'load', loadMap());
        
-    },
-    
-    //Function run on DOM load
-    loadMap: function() {
-         
-        //Get the location to display the coordinates
-        this.lat = document.getElementById("latcoords");
-        this.lng = document.getElementById("loncoords");
-        
-        //Set the map options
-        var mapOptions = {
-
-            //Zoom on load
-            zoom: 3,
-
-            //Map center
-            center: new google.maps.LatLng(40.748817,-73.985428),
-
-            //Limit min/max zoom
-    //        minZoom: 2,
-    //        maxZoom: 18,
-    //        
-    //        mapTypeControl: true,
-    //        mapTypeControlOptions: {
-    //            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-    //            mapTypeIds: [google.maps.MapTypeId.ROADMAP,
-    //                         google.maps.MapTypeId.SATELLITE,
-    //                         google.maps.MapTypeId.HYBRID,     
-    //                         google.maps.MapTypeId.TERRAIN]                   
-    //        },
-    //        mapTypeId: google.maps.MapTypeId.ROADMAP,       
-
-            //0 to 45deg, only valid for satellite and terrain
-    //        tilt: 0,
-
-    //        zoomControl: true,
-    //        zoomControlOptions: {
-    //            style: google.maps.ZoomControlStyle.SMALL,
-    //            position: google.maps.ControlPosition.RIGHT_TOP
-    //        },
-    //        
-    //        panControl: true,
-    //        streetViewControl: true
-
-            //Overview map
-            overviewMapControl: true,
-            overviewMapControlOptions: {
-                opened: true
-            },
-
-            //Set the map style
-            styles: cladmeMapStyle, //shiftWorkerMapStyle,
-
-        };
-
-        //Get the id of the map container div
-        var mapid = document.getElementById('map');
-
-        //Create the map
-        map = new google.maps.Map(mapid,mapOptions);
-
-        //Examples
-        var newMarker = this.addMarker();
-        this.addInfoWindow(newMarker);
-        
-        //Trigger click event to open window
-        //google.maps.event.trigger(newMarker, 'click');
-        
-        //Update the lat/lng on load of the map center
-        this.updateCurrentLatLng(map.getCenter());
-        
-        //Add Earth Quake Markers
-        this.addEarthQuakeMarkers();
-
-    },
-
-    //Add a marker to the map
-    addMarker: function() {
-
-        //Create the marker (#MarkerOptions)    
-        var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(40.748817,-73.985428),
-            map: map,        
-            title: 'Tooltip Title',
-    //        icon : new google.maps.MarkerImage(icon,
-    //                    new google.maps.Size(32,32),
-    //                    new google.maps.Point(0,0),
-    //                    new google.maps.Point(0,32),
-    //                    new google.maps.Size(24,24)) 
-            //zIndex
-            //visible
-            //keep multiple pop-ups open
-        });
-
-        //Marker events (#MarkerEvents)
-    //    marker.setMap(map);
-    //    marker.setVisible(false);
-        marker.setOptions({draggable: true });
-
-        return marker;
-    },
-    
-    //Add the infowindow
-    addInfoWindow: function(marker) {
-
-        var contentString = '<div class="infowindowcontent">'+
-            '<h1>Title</h1>'+
-            '<div class="infowindowaddress">Address</div>'+
-            '</div>';
-
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString
-        });
-
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.open(map,marker);
-        });
-    },
-    
-    
-    //Add the markers to the map
-    addEarthQuakeMarkers: function() {
-        
-        //Get the base features
-        var quakes = earthquakes[0].features;
-        
-        //Create an array to hold all the markers
-        this.earthquakemarkers = new Array();
-        
-        //Loop through all the earthquakes
-        for (var quake in quakes) {
-            
-            //Get the coordinates for the JSON feed
-            var coords = quakes[quake].geometry.coordinates;
-            
-            //Extract the latitude/longitude
-            var lng = coords[0];
-            var lat = coords[1];
-                                  
-            //Create the marker
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(lat,lng), 
-                title: quakes[quake].properties.place,
-                //Add Custom icon
-                //Close markers on click
-            });
-    
-            //Bind the properties to the marker object
-            marker.quakeproperties = quakes[quake].properties;
-            
-            //Add the marker to the map
-            marker.setMap(map);
-            
-            //Add the info window
-            this.addEarthQuakeInfoWindow(marker);
-            
-            //Push the marker to save
-            //Control visibility
-            this.earthquakemarkers.push(marker);
-        }
-        
-    },
-        
-    //Add the infowindow
-    addEarthQuakeInfoWindow: function(marker) {
-
-        var info = marker.quakeproperties;
-        
-        //Add custom styling
-        var contentString = '<div class="infowindowcontent">'+
-            '<h1>'+info.title+'</h1>'+
-            '<div class="infowindowaddress">'+info.place+'</div>'+
-            '</div>';
-
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString
-        });
-
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.open(map,marker);
-        });
-    },
-    
-//    geoCodeAddress: function(address) {
-//        
-//        geocoder.geocode( { 'address': address}, function(results, status) {
-//          if (status == google.maps.GeocoderStatus.OK) {
-//            map.setCenter(results[0].geometry.location);
-//            var marker = new google.maps.Marker({
-//                map: map,
-//                position: results[0].geometry.location
-//            });
-//          } else {
-//            alert("Geocode was not successful for the following reason: " + status);
-//          }
-//        });
-//    },
-    
-    mapEventListeners: function() {
-        
-        var that = this;
-        
-        //Wait for map to load
-//        var listenerIdle = google.maps.event.addListenerOnce(map, 'idle',
-//            function() {
-//                //TODO
-//            }
-//        );
-//        
-//        var listenerDragEnd = google.maps.event.addListener(map, 'dragend', 
-//            function() {
-//                //TODO
-//            }
-//        );
-//
-//        var listenerZoomChanged = google.maps.event.addListener(map, 'zoom_changed',
-//            function() {
-//                //TODO
-//            }
-//        );
-        
-        
-        
-        /* Mouse move updates the coordinates */
-        var mouseMoveChanged = google.maps.event.addListener(map, 'mousemove',
-            function(event) {            
-                
-                //Update the coordinates
-                that.updateCurrentLatLng(event.latLng);
-                    
-            }
-        );
-        
-    },
-    
-    updateCurrentLatLng: function(latLng) {
-        
-        //Update the coordinates
-        this.lat.innerHTML = latLng.lat();
-        this.lng.innerHTML = latLng.lng();
-    }
-    
-};
-
-//Intialize the map
-mapevents.init();
 
 
 
