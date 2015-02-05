@@ -4,7 +4,7 @@ var map;
 var mapevents = {
     
     //Init function
-    init: function() {        
+    init: function() {      
         
         //Load the map on load
         google.maps.event.addDomListener(window, 'load', this.loadMap());
@@ -25,7 +25,7 @@ var mapevents = {
         var mapOptions = {
 
             //Zoom on load
-            zoom: 11,
+            zoom: 3,
 
             //Map center
             center: new google.maps.LatLng(40.748817,-73.985428),
@@ -63,7 +63,7 @@ var mapevents = {
             },
 
             //Set the map style
-            styles: mapStyle,
+            styles: cladmeMapStyle, //shiftWorkerMapStyle,
 
         };
 
@@ -77,11 +77,18 @@ var mapevents = {
         var newMarker = this.addMarker();
         this.addInfoWindow(newMarker);
         
+        //Trigger click event to open window
+        //google.maps.event.trigger(newMarker, 'click');
+        
         //Update the lat/lng on load of the map center
         this.updateCurrentLatLng(map.getCenter());
+        
+        //Add Earth Quake Markers
+        this.addEarthQuakeMarkers();
 
     },
 
+    //Add a marker to the map
     addMarker: function() {
 
         //Create the marker (#MarkerOptions)    
@@ -96,6 +103,7 @@ var mapevents = {
     //                    new google.maps.Size(24,24)) 
             //zIndex
             //visible
+            //keep multiple pop-ups open
         });
 
         //Marker events (#MarkerEvents)
@@ -106,11 +114,76 @@ var mapevents = {
         return marker;
     },
     
+    //Add the infowindow
     addInfoWindow: function(marker) {
 
         var contentString = '<div class="infowindowcontent">'+
             '<h1>Title</h1>'+
             '<div class="infowindowaddress">Address</div>'+
+            '</div>';
+
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.open(map,marker);
+        });
+    },
+    
+    
+    //Add the markers to the map
+    addEarthQuakeMarkers: function() {
+        
+        //Get the base features
+        var quakes = earthquakes[0].features;
+        
+        //Create an array to hold all the markers
+        this.earthquakemarkers = new Array();
+        
+        //Loop through all the earthquakes
+        for (var quake in quakes) {
+            
+            //Get the coordinates for the JSON feed
+            var coords = quakes[quake].geometry.coordinates;
+            
+            //Extract the latitude/longitude
+            var lng = coords[0];
+            var lat = coords[1];
+                                  
+            //Create the marker
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(lat,lng), 
+                title: quakes[quake].properties.place,
+                //Add Custom icon
+                //Close markers on click
+            });
+    
+            //Bind the properties to the marker object
+            marker.quakeproperties = quakes[quake].properties;
+            
+            //Add the marker to the map
+            marker.setMap(map);
+            
+            //Add the info window
+            this.addEarthQuakeInfoWindow(marker);
+            
+            //Push the marker to save
+            //Control visibility
+            this.earthquakemarkers.push(marker);
+        }
+        
+    },
+        
+    //Add the infowindow
+    addEarthQuakeInfoWindow: function(marker) {
+
+        var info = marker.quakeproperties;
+        
+        //Add custom styling
+        var contentString = '<div class="infowindowcontent">'+
+            '<h1>'+info.title+'</h1>'+
+            '<div class="infowindowaddress">'+info.place+'</div>'+
             '</div>';
 
         var infowindow = new google.maps.InfoWindow({
@@ -188,5 +261,3 @@ mapevents.init();
 
 
 
-//Trigger an event
-//google.maps.event.trigger(marker, 'click');
