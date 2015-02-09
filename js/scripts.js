@@ -51,13 +51,31 @@ function addMarker() {
             
             //Scales the image
             scaledSize: new google.maps.Size(32,32)
-        }
+        },
+        
+        //Set the animation (BOUNCE or DROP)
+        animation: google.maps.Animation.DROP,
+        
+        //Sets whether marker is clickable
+        clickable: true,
+        
+        //Drag marker
+        draggable: true,
+        
+        //Sets the opacity
+        opacity: 1.0,
+        
+        //Sets the title when mouse hovers
+        title: 'Tooltip title',
+        
+        //Set visiblility
+        visible: true,
+        
+        //Sets the zIndex if multiple markers are displayed
+        zIndex: 1
+        
+        
     });
-
-  
-    //Marker events (#MarkerEvents)
-//    marker.setMap(map);
-//    marker.setVisible(false);
 
     return marker;
 }
