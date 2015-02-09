@@ -95,7 +95,19 @@ function addInfoWindow(marker) {
         '</div>';
 
     var infowindow = new google.maps.InfoWindow({
-        content: contentString
+        
+        //Set the content of the infowindow
+        content: contentString,
+        
+        //Pan the map if infowindow extends offscreen
+        disableAutoPan: true,
+        
+        //Set the max width
+        maxWidth: 200,
+        
+        //Set the zIndex when overlaying
+        zIndex, 1
+        
     });
 
     google.maps.event.addListener(marker, 'click', function() {
