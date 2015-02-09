@@ -25,7 +25,13 @@ function loadMap() {
 
     //Marker creation
     var newMarker = this.addMarker();
-        
+    
+    //Adds the infowindow
+    addInfoWindow(newMarker);
+    
+    //Trigger marker infowindow
+    
+    
 }
 
 //Add a marker to the map
@@ -73,11 +79,28 @@ function addMarker() {
         
         //Sets the zIndex if multiple markers are displayed
         zIndex: 1
-        
-        
+                
     });
 
     return marker;
+}
+
+
+function addInfoWindow(marker) {
+   
+    //Add embedded image and text with link _blank    
+    var contentString = '<div class="infowindowcontent">'+
+        '<h1>Title</h1>'+
+        '<div class="infowindowaddress">Address</div>'+        
+        '</div>';
+
+    var infowindow = new google.maps.InfoWindow({
+        content: contentString
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map,marker);
+    });
 }
 
 //Load the map
