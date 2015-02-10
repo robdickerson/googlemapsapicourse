@@ -1,1 +1,1 @@
-googlemapsapicourse
+Course - Introduction to the Google Maps API
