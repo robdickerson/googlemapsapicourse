@@ -90,7 +90,7 @@ function addInfoWindow(marker) {
    
     //Add embedded image and text with link _blank    
     var contentString = '<div class="infowindowcontent">'+
-        '<h1>Title</h1>'+
+        '<h1>My Marker Content</h1>'+
         '<div class="infowindowaddress">Address</div>'+        
         '</div>';
 
@@ -100,13 +100,13 @@ function addInfoWindow(marker) {
         content: contentString,
         
         //Pan the map if infowindow extends offscreen
-        disableAutoPan: true,
+        disableAutoPan: false,
         
         //Set the max width
-        maxWidth: 200,
+        maxWidth: 400,
         
         //Set the zIndex when overlaying
-        zIndex, 1
+        zIndex: 1
         
     });
 
