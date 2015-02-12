@@ -145,35 +145,6 @@ function addInfoWindow(marker) {
 
 }
 
-function extractAirportCodes() {
-
-    var regExp = /\(([^)]+)\)/;
-    
-    for (var i=0; i< airportdata.length; i++) {        
-        
-        var matches = regExp.exec(airportdata[i].airport);
-        airportdata[i].code = matches[1];
-    
-    }
-
-    console.log(JSON.stringify(airportdata));
-}
-
-function geoCodeAddress(address) {
-
-    geocoder.geocode( { 'address': address}, function(results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-        map.setCenter(results[0].geometry.location);
-        var marker = new google.maps.Marker({
-            map: map,
-            position: results[0].geometry.location
-        });
-      } else {
-        alert("Geocode was not successful for the following reason: " + status);
-      }
-    });
-}
-
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
