@@ -2,6 +2,9 @@
 var map;
 var geocoder;
 
+//Create a single infowindow
+var infowindow = new google.maps.InfoWindow();
+
 //Function run on DOM load
 function loadMap() {
     
@@ -50,16 +53,16 @@ function loadMap() {
         
         //Set the icon
         if(airport.totalper >= 80) {
-            airport.icon = 'img/airplane-green.png';
+            airport.icon = 'green';            
         } 
         else if((70 <= airport.totalper) && (airport.totalper < 80)) {
-            airport.icon = 'img/airplane-yellow.png';
+            airport.icon = 'yellow';            
         } 
         else if((60 <= airport.totalper) && (airport.totalper < 70)) {
-            airport.icon = 'img/airplane-orange.png';
+            airport.icon = 'orange';
         }
         else {
-            airport.icon = 'img/airplane-red.png';
+            airport.icon = 'red';
         }
         
         //Add the marker to the map
@@ -72,22 +75,11 @@ function loadMap() {
         addInfoWindow(newMarker);
         
     }
-    
-//    //Marker creation
-//    var newMarker = this.addMarker();
-//    
-//    //Adds the infowindow
-//    addInfoWindow(newMarker);
-//    
-//    //Trigger marker infowindow
-//    geocoder = new google.maps.Geocoder();
-  
+      
 }
 
 //Add a marker to the map
 function addMarker(obj) {
-    
-    
     
     //Create the marker (#MarkerOptions)    
     var marker = new google.maps.Marker({
@@ -96,7 +88,7 @@ function addMarker(obj) {
         icon: {
             
             //URL of the image
-            url: obj.icon,
+            url: 'img/airplane-'+obj.icon+'.png',
             
             //Sets the image size
             size: obj.iconsize,
@@ -115,48 +107,49 @@ function addMarker(obj) {
         title: obj.airport,        
                 
     });
-
-    
     
     return marker;
 }
 
 
+//Add the infowindow
 function addInfoWindow(marker) {
-   
+    
     var details = marker.airport;
     
-    //Add embedded image and text with link _blank    
+    //Content string 
     var contentString = '<div class="infowindowcontent">'+
-        '<h1>'+details.airport+'</h1>'+
-        '<span>Coordinates: '+details.lat+','+details.lng+'</span>' +
-        '<div>Ontime Arrivals: '+details.aper+'%</div>' +
-        '<div>Ontime Departures: '+details.dper+'%</div>' +        
+        '<div class="row">' +
+        '<p class="total '+details.icon+'bk">'+Math.round(details.totalper*10)/10+'%</p>'+
+        '<p class="location">'+details.airport.split("(")[0].substring(0,19)+'</p>'+
+        '<p class="code">'+details.code+'</p>'+
+        '</div>'+
+        '<div class="data">'+
+        '<p class="tagbelow">Avg On-Time</p>'+
+        '<p class="label">Arrivals</p>'+
+        '<p class="details">'+details.aper+'% ('+numberWithCommas(details.aop)+')</p>' +
+        '<p class="label">Departures</p>'+
+        '<p class="details">'+details.dper+'% ('+numberWithCommas(details.dop)+')</p>' +        
+        '<p class="coords">'+details.lat+' , '+details.lng+'</p>' +
+        '</div>';
         '</div>';
 
-    var infowindow = new google.maps.InfoWindow({
-        
-        //Set the content of the infowindow
-        content: contentString,
-        
-        //Set the max width
-        maxWidth: 400,        
-        
-    });
-
+    //Add the info window
     google.maps.event.addListener(marker, 'click', function() {
+        
+        infowindow.close();
+        infowindow.setContent(contentString);        
         infowindow.open(map,marker);
+        
     });
+
 }
-
-
 
 function extractAirportCodes() {
 
     var regExp = /\(([^)]+)\)/;
     
-    for (var i=0; i< airportdata.length; i++) {
-        //console.log(airportdata[i].airport);
+    for (var i=0; i< airportdata.length; i++) {        
         
         var matches = regExp.exec(airportdata[i].airport);
         airportdata[i].code = matches[1];
@@ -179,6 +172,10 @@ function geoCodeAddress(address) {
         alert("Geocode was not successful for the following reason: " + status);
       }
     });
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 //Load the map
