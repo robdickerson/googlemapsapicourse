@@ -1,5 +1,6 @@
 //Global map variable
 var map;
+var geocoder;
 
 //Function run on DOM load
 function loadMap() {
@@ -8,10 +9,10 @@ function loadMap() {
     var mapOptions = {
 
         //Zoom on load
-        zoom: 11,
+        zoom: 5,
 
         //Map center
-        center: new google.maps.LatLng(40.748817,-73.985428),
+        center: new google.maps.LatLng(39.828127,-98.579404),
       
         //Set the map style
         styles: shiftWorkerMapStyle, 
@@ -23,31 +24,82 @@ function loadMap() {
     //Create the map
     map = new google.maps.Map(mapid,mapOptions);
 
-    //Marker creation
-    var newMarker = this.addMarker();
+    for (var i=0;i<airportdata.length;i++) {
+     
+        var airport = airportdata[i];
+        
+        //Avg percentage
+        airport.totalper = (airport.aper + airport.dper)/2;
+        
+        //Total flights
+        airport.totalflights = (airport.aop + airport.dop);
+        
+        //Scale        
+        if(airport.totalflights > 10000) {
+            airport.iconsize = new google.maps.Size(48,48);
+        }
+        else if((1000 < airport.totalflights) && (airport.totalflights <= 10000)) {
+            airport.iconsize = new google.maps.Size(32,32);
+        }
+        else if(airport.totalflights <= 1000) {
+            airport.iconsize = new google.maps.Size(16,16);
+        }
+        else {
+            airport.scaleicon = 1;
+        }
+        
+        //Set the icon
+        if(airport.totalper >= 80) {
+            airport.icon = 'img/airplane-green.png';
+        } 
+        else if((70 <= airport.totalper) && (airport.totalper < 80)) {
+            airport.icon = 'img/airplane-yellow.png';
+        } 
+        else if((60 <= airport.totalper) && (airport.totalper < 70)) {
+            airport.icon = 'img/airplane-orange.png';
+        }
+        else {
+            airport.icon = 'img/airplane-red.png';
+        }
+        
+        //Add the marker to the map
+        newMarker = addMarker(airport);
+        
+        //Append the data to the marker
+        newMarker.airport = airport;
+        
+        //Adds the infowindow
+        addInfoWindow(newMarker);
+        
+    }
     
-    //Adds the infowindow
-    addInfoWindow(newMarker);
-    
-    //Trigger marker infowindow
-    
-    
+//    //Marker creation
+//    var newMarker = this.addMarker();
+//    
+//    //Adds the infowindow
+//    addInfoWindow(newMarker);
+//    
+//    //Trigger marker infowindow
+//    geocoder = new google.maps.Geocoder();
+  
 }
 
 //Add a marker to the map
-function addMarker() {
-        
+function addMarker(obj) {
+    
+    
+    
     //Create the marker (#MarkerOptions)    
     var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(40.748817,-73.985428),
+        position: new google.maps.LatLng(obj.lat,obj.lng),
         map: map,                
         icon: {
             
             //URL of the image
-            url: 'img/custom_icon.png',
+            url: obj.icon,
             
             //Sets the image size
-            size: new google.maps.Size(32,32),
+            size: obj.iconsize,
             
             //Sets the origin of the image (top left)
             origin: new google.maps.Point(0,0),
@@ -56,42 +108,30 @@ function addMarker() {
             anchor: new google.maps.Point(16,32),
             
             //Scales the image
-            scaledSize: new google.maps.Size(32,32)
+            scaledSize: obj.iconsize
         },
-        
-        //Set the animation (BOUNCE or DROP)
-        animation: google.maps.Animation.DROP,
-        
-        //Sets whether marker is clickable
-        clickable: true,
-        
-        //Drag marker
-        draggable: true,
-        
-        //Sets the opacity
-        opacity: 1.0,
-        
+                
         //Sets the title when mouse hovers
-        title: 'Tooltip title',
-        
-        //Set visiblility
-        visible: true,
-        
-        //Sets the zIndex if multiple markers are displayed
-        zIndex: 1
+        title: obj.airport,        
                 
     });
 
+    
+    
     return marker;
 }
 
 
 function addInfoWindow(marker) {
    
+    var details = marker.airport;
+    
     //Add embedded image and text with link _blank    
     var contentString = '<div class="infowindowcontent">'+
-        '<h1>My Marker Content</h1>'+
-        '<div class="infowindowaddress">Address</div>'+        
+        '<h1>'+details.airport+'</h1>'+
+        '<span>Coordinates: '+details.lat+','+details.lng+'</span>' +
+        '<div>Ontime Arrivals: '+details.aper+'%</div>' +
+        '<div>Ontime Departures: '+details.dper+'%</div>' +        
         '</div>';
 
     var infowindow = new google.maps.InfoWindow({
@@ -99,19 +139,45 @@ function addInfoWindow(marker) {
         //Set the content of the infowindow
         content: contentString,
         
-        //Pan the map if infowindow extends offscreen
-        disableAutoPan: false,
-        
         //Set the max width
-        maxWidth: 400,
-        
-        //Set the zIndex when overlaying
-        zIndex: 1
+        maxWidth: 400,        
         
     });
 
     google.maps.event.addListener(marker, 'click', function() {
         infowindow.open(map,marker);
+    });
+}
+
+
+
+function extractAirportCodes() {
+
+    var regExp = /\(([^)]+)\)/;
+    
+    for (var i=0; i< airportdata.length; i++) {
+        //console.log(airportdata[i].airport);
+        
+        var matches = regExp.exec(airportdata[i].airport);
+        airportdata[i].code = matches[1];
+    
+    }
+
+    console.log(JSON.stringify(airportdata));
+}
+
+function geoCodeAddress(address) {
+
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        map.setCenter(results[0].geometry.location);
+        var marker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location
+        });
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
     });
 }
 
