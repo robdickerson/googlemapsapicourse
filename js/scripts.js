@@ -11,7 +11,7 @@ function loadMap() {
         zoom: 11,
 
         //Map center
-        center: new google.maps.LatLng(40.748817,-73.985428),
+        center: new google.maps.LatLng(40.6413111,-73.77813909),
       
         //Set the map style
         styles: shiftWorkerMapStyle, 
@@ -30,7 +30,7 @@ function loadMap() {
     addInfoWindow(newMarker);
     
     //Trigger marker infowindow
-    
+    google.maps.event.trigger(newMarker, 'click');
     
 }
 
@@ -39,12 +39,18 @@ function addMarker() {
         
     //Create the marker (#MarkerOptions)    
     var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(40.748817,-73.985428),
+          
+        //Position of marker
+        position: new google.maps.LatLng(40.6413111,-73.77813909),
+        
+        //Map
         map: map,                
+        
+        //Icon details
         icon: {
             
             //URL of the image
-            url: 'img/custom_icon.png',
+            url: 'img/airplane-green.png',
             
             //Sets the image size
             size: new google.maps.Size(32,32),
@@ -60,7 +66,7 @@ function addMarker() {
         },
         
         //Set the animation (BOUNCE or DROP)
-        animation: google.maps.Animation.DROP,
+        //animation: google.maps.Animation.DROP,
         
         //Sets whether marker is clickable
         clickable: true,
@@ -72,8 +78,8 @@ function addMarker() {
         opacity: 1.0,
         
         //Sets the title when mouse hovers
-        title: 'Tooltip title',
-        
+        title: 'NEW YORK NY (JFK)',
+                
         //Set visiblility
         visible: true,
         
@@ -85,15 +91,27 @@ function addMarker() {
     return marker;
 }
 
-
+//Associate an infowindow with the marker
 function addInfoWindow(marker) {
-   
-    //Add embedded image and text with link _blank    
+        
+    //Content string 
     var contentString = '<div class="infowindowcontent">'+
-        '<h1>My Marker Content</h1>'+
-        '<div class="infowindowaddress">Address</div>'+        
+        '<div class="row">' +
+        '<p class="total greenbk">78.3%</p>'+
+        '<p class="location">NEW YORK NY</p>'+
+        '<p class="code">JFK</p>'+
+        '</div>'+
+        '<div class="data">'+
+        '<p class="tagbelow">Avg On-Time</p>'+
+        '<p class="label">Arrivals</p>'+
+        '<p class="details">76% (8,590)</p>' +
+        '<p class="label">Departures</p>'+
+        '<p class="details">80.5% (8,589)</p>' +        
+        '<p class="coords">40.6413111 , -73.77813909</p>' +
+        '</div>';
         '</div>';
 
+    //Create the infowindow
     var infowindow = new google.maps.InfoWindow({
         
         //Set the content of the infowindow
@@ -103,14 +121,17 @@ function addInfoWindow(marker) {
         disableAutoPan: false,
         
         //Set the max width
-        maxWidth: 400,
+        maxWidth: 300,
         
         //Set the zIndex when overlaying
         zIndex: 1
         
     });
 
-    google.maps.event.addListener(marker, 'click', function() {
+    //Add click event listener
+    google.maps.event.addListener(marker, 'click', function(e) {
+        
+        //Open the infowindow on click
         infowindow.open(map,marker);
     });
 }
