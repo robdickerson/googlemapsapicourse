@@ -11,7 +11,7 @@ function loadMap() {
         zoom: 11,
 
         //Map center
-        center: new google.maps.LatLng(40.748817,-73.985428),
+        center: new google.maps.LatLng(40.6413111,-73.77813909),
       
         //Set the map style
         styles: shiftWorkerMapStyle, 
@@ -33,12 +33,18 @@ function addMarker() {
         
     //Create the marker (#MarkerOptions)    
     var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(40.748817,-73.985428),
+          
+        //Position of marker
+        position: new google.maps.LatLng(40.6413111,-73.77813909),
+        
+        //Map
         map: map,                
+        
+        //Icon details
         icon: {
             
             //URL of the image
-            url: 'img/custom_icon.png',
+            url: 'img/airplane-green.png',
             
             //Sets the image size
             size: new google.maps.Size(32,32),
@@ -66,7 +72,7 @@ function addMarker() {
         opacity: 1.0,
         
         //Sets the title when mouse hovers
-        title: 'Tooltip title',
+        title: 'NEW YORK NY (JFK)',
         
         //Set visiblility
         visible: true,
@@ -82,7 +88,3 @@ function addMarker() {
 
 //Load the map
 google.maps.event.addDomListener(window, 'load', loadMap());
-       
-
-
-
