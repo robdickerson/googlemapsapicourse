@@ -1,6 +1,5 @@
 //Global map variable
 var map;
-var geocoder;
 
 //Create a single infowindow
 var infowindow = new google.maps.InfoWindow();
