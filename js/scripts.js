@@ -26,6 +26,13 @@ function loadMap() {
     //Create the map
     map = new google.maps.Map(mapid,mapOptions);
 
+    //Update the URL with the current location
+    updateUrlLocation(map.getCenter(), map.getZoom());
+    
+    //Add the event listeners
+    mapEventListeners();
+    
+    //Loop through the airport data
     for (var i=0;i<airportdata.length;i++) {
      
         var airport = airportdata[i];
@@ -82,8 +89,14 @@ function addMarker(obj) {
     
     //Create the marker (#MarkerOptions)    
     var marker = new google.maps.Marker({
+        
+        //Position of marker
         position: new google.maps.LatLng(obj.lat,obj.lng),
+        
+        //Map
         map: map,                
+        
+        //Icon details
         icon: {
             
             //URL of the image
@@ -111,9 +124,9 @@ function addMarker(obj) {
 }
 
 
-//Add the infowindow
+//Associate an infowindow with the marker
 function addInfoWindow(marker) {
-    
+        
     var details = marker.airport;
     
     //Content string 
@@ -133,17 +146,50 @@ function addInfoWindow(marker) {
         '</div>';
         '</div>';
 
-    //Add the info window
+    //Add click event listener
     google.maps.event.addListener(marker, 'click', function() {
         
+        //Close any open infowindows
         infowindow.close();
+        
+        //Set the new content
         infowindow.setContent(contentString);        
+        
+        //Open the infowindow
         infowindow.open(map,marker);
         
     });
-
 }
 
+// Add the map event listeners
+function mapEventListeners() {
+   
+    //Drag End
+    var listenerDragEnd = google.maps.event.addListener(map, 'dragend', 
+        function() {
+            updateUrlLocation(map.getCenter(), map.getZoom());
+        }
+    );
+
+    //Zoom changed
+    var listenerZoomChanged = google.maps.event.addListener(map, 'zoom_changed',
+        function() {
+            updateUrlLocation(map.getCenter(), map.getZoom());
+        }
+    );
+    
+}
+
+//Update the URL with the map center and zoom
+function updateUrlLocation(center, zoom) {
+    
+    var url = '?lat='+center.lat()+'&lon='+center.lng()+'&zoom='+zoom;   
+    
+    //Set the url
+    window.history.pushState({center: center, zoom: zoom }, "map center", url);  
+}
+
+//Add Commas to number
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
