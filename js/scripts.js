@@ -108,7 +108,7 @@ function addInfoWindow(marker) {
         '<p class="label">Departures</p>'+
         '<p class="details">80.5% (8,589)</p>' +        
         '<p class="coords">40.6413111 , -73.77813909</p>' +
-        '</div>';
+        '</div>' +
         '</div>';
 
     //Create the infowindow
