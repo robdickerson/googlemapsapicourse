@@ -143,7 +143,7 @@ function addInfoWindow(marker) {
         '<p class="label">Departures</p>'+
         '<p class="details">'+details.dper+'% ('+numberWithCommas(details.dop)+')</p>' +        
         '<p class="coords">'+details.lat+' , '+details.lng+'</p>' +
-        '</div>';
+        '</div>'+
         '</div>';
 
     //Add click event listener
