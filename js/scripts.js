@@ -4,38 +4,38 @@ var map;
 //Style elements
 var mapStyle = [
     {
-        "stylers":[
-            {"saturation":-100},
-            {"gamma":1}
+        'stylers':[
+            {'saturation':-100},
+            {'gamma':1}
         ]
     },
     {
-        "elementType":"labels.text.stroke",
-        "stylers":[
-            {"visibility":"off"}
+        'elementType':'labels.text.stroke',
+        'stylers':[
+            {'visibility':'off'}
         ]
     },
     {
-        "featureType":"road",
-        "elementType":"geometry",
-        "stylers":[
-            {"visibility":"simplified"}
+        'featureType':'road',
+        'elementType':'geometry',
+        'stylers':[
+            {'visibility':'simplified'}
         ]
     },
     {
-        "featureType":"water",
-        "stylers":[
-            {"visibility":"on"},
-            {"saturation":50},
-            {"gamma":0},
-            {"hue":"#50a5d1"}
+        'featureType':'water',
+        'stylers':[
+            {'visibility':'on'},
+            {'saturation':50},
+            {'gamma':0},
+            {'hue':'#50a5d1'}
         ]
     },
     {
-        "featureType":"landscape",
-        "elementType":"all",
-        "stylers":[
-            {"color":"#e2e2e2"}
+        'featureType':'landscape',
+        'elementType':'all',
+        'stylers':[
+            {'color':'#e2e2e2'}
         ]
     }
 ];
@@ -97,14 +97,14 @@ function loadMap() {
         },
 
         //Set the map style
-        styles: mapStyle, 
+        styles: mapStyle
     };
 
     //Get the id of the map container div
-    var mapid = document.getElementById('map');
+    var mapId = document.getElementById('map');
 
     //Create the map
-    map = new google.maps.Map(mapid,mapOptions);
+    map = new google.maps.Map(mapId,mapOptions);
 
 }
   
