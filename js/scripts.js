@@ -2,8 +2,8 @@
 var map;
 
 //Get the location to display the coordinates
-var lat = document.getElementById("latcoords");
-var lng = document.getElementById("loncoords");
+var lat = document.getElementById('latcoords');
+var lng = document.getElementById('loncoords');
 
 //Function run on DOM load
 function loadMap() {
@@ -50,14 +50,14 @@ function loadMap() {
         },
 
         //Set the map style
-        styles: shiftWorkerMapStyle, 
+        styles: shiftWorkerMapStyle 
     };
 
     //Get the id of the map container div
-    var mapid = document.getElementById('map');
+    var mapId = document.getElementById('map');
 
     //Create the map
-    map = new google.maps.Map(mapid,mapOptions);
+    map = new google.maps.Map(mapId,mapOptions);
     
     //Update the lat/lng on load of the map center
     updateCurrentLatLng(map.getCenter());
@@ -122,7 +122,7 @@ function updateUrlLocation(center, zoom) {
     var url = '?lat='+center.lat()+'&lon='+center.lng()+'&zoom='+zoom;   
     
     //Set the url
-    window.history.pushState({center: center, zoom: zoom }, "map center", url);  
+    window.history.pushState({center: center, zoom: zoom }, 'map center', url);  
 }
 
 //Load the map
