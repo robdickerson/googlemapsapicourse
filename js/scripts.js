@@ -2,7 +2,7 @@
 var map;
 
 //Create a single infowindow
-var infowindow = new google.maps.InfoWindow();
+var infoWindow = new google.maps.InfoWindow();
 
 //Function run on DOM load
 function loadMap() {
@@ -17,14 +17,14 @@ function loadMap() {
         center: new google.maps.LatLng(39.828127,-98.579404),
       
         //Set the map style
-        styles: shiftWorkerMapStyle, 
+        styles: shiftWorkerMapStyle 
     };
 
     //Get the id of the map container div
-    var mapid = document.getElementById('map');
+    var mapId = document.getElementById('map');
 
     //Create the map
-    map = new google.maps.Map(mapid,mapOptions);
+    map = new google.maps.Map(mapId,mapOptions);
 
     //Update the URL with the current location
     updateUrlLocation(map.getCenter(), map.getZoom());
@@ -33,9 +33,9 @@ function loadMap() {
     mapEventListeners();
     
     //Loop through the airport data
-    for (var i=0;i<airportdata.length;i++) {
+    for (var i=0;i<airportData.length;i++) {
      
-        var airport = airportdata[i];
+        var airport = airportData[i];
         
         //Avg percentage
         airport.totalper = (airport.aper + airport.dper)/2;
@@ -116,7 +116,7 @@ function addMarker(obj) {
         },
                 
         //Sets the title when mouse hovers
-        title: obj.airport,        
+        title: obj.airport       
                 
     });
     
@@ -150,13 +150,13 @@ function addInfoWindow(marker) {
     google.maps.event.addListener(marker, 'click', function() {
         
         //Close any open infowindows
-        infowindow.close();
+        infoWindow.close();
         
         //Set the new content
-        infowindow.setContent(contentString);        
+        infoWindow.setContent(contentString);        
         
         //Open the infowindow
-        infowindow.open(map,marker);
+        infoWindow.open(map,marker);
         
     });
 }
@@ -186,12 +186,12 @@ function updateUrlLocation(center, zoom) {
     var url = '?lat='+center.lat()+'&lon='+center.lng()+'&zoom='+zoom;   
     
     //Set the url
-    window.history.pushState({center: center, zoom: zoom }, "map center", url);  
+    window.history.pushState({center: center, zoom: zoom }, 'map center', url);  
 }
 
 //Add Commas to number
 function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 //Load the map

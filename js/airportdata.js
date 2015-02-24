@@ -11,7 +11,7 @@
 // dop      - Departure Operations
 // lng      - Longitude
 
-var airportdata = [
+var airportData = [
   {
     "aper": 87.1,
     "code": "ABR",
