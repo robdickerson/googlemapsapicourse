@@ -12,7 +12,7 @@ html, body, #map {
 
 /* Style for the info window */
 .infowindowcontent {
-    font-family: "FranklinITCStdLight","Helvetica",'Arial',sans-serif;
+    font-family: "FranklinITCStdLight","Helvetica","Arial",sans-serif;
     line-height: 10px;
     
     width: 300px;

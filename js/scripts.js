@@ -14,14 +14,14 @@ function loadMap() {
         center: new google.maps.LatLng(40.6413111,-73.77813909),
       
         //Set the map style
-        styles: shiftWorkerMapStyle, 
+        styles: shiftWorkerMapStyle 
     };
 
     //Get the id of the map container div
-    var mapid = document.getElementById('map');
+    var mapId = document.getElementById('map');
 
     //Create the map
-    map = new google.maps.Map(mapid,mapOptions);
+    map = new google.maps.Map(mapId,mapOptions);
 
     //Marker creation
     var newMarker = this.addMarker();
@@ -112,7 +112,7 @@ function addInfoWindow(marker) {
         '</div>';
 
     //Create the infowindow
-    var infowindow = new google.maps.InfoWindow({
+    var infoWindow = new google.maps.InfoWindow({
         
         //Set the content of the infowindow
         content: contentString,
@@ -132,7 +132,7 @@ function addInfoWindow(marker) {
     google.maps.event.addListener(marker, 'click', function(e) {
         
         //Open the infowindow on click
-        infowindow.open(map,marker);
+        infoWindow.open(map,marker);
     });
 }
 
