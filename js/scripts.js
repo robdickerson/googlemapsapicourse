@@ -11,15 +11,15 @@ function loadMap() {
         zoom: 11,
 
         //Map center
-        center: new google.maps.LatLng(40.748817,-73.985428),
+        center: new google.maps.LatLng(40.748817,-73.985428)
 
     };
 
     //Get the id of the map container div
-    var mapid = document.getElementById('map');
+    var mapId = document.getElementById('map');
 
     //Create the map
-    map = new google.maps.Map(mapid,mapOptions);
+    map = new google.maps.Map(mapId,mapOptions);
 
 }
   
