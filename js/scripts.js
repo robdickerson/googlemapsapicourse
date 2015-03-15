@@ -84,6 +84,26 @@ function mapEventListeners() {
         }
     );
     
+    
+    var mouseDoubleClick = google.maps.event.addListener(map, 'rightclick',
+        function(event) {
+            
+            //Get the map zoom and increment
+            var z = map.getZoom()+1;
+        
+            //Increment the zoom or reset
+            if(z < 16) {                
+                map.setZoom(z);
+            }
+            else {
+                map.setZoom(11);
+            }
+        
+            //Set the map center to the mouse click
+            map.setCenter(event.latLng);
+        }
+    );
+    
     //Wait for map to load
     var listenerIdle = google.maps.event.addListenerOnce(map, 'idle',
         function() {
