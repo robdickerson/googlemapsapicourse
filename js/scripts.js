@@ -47,10 +47,10 @@ function loadMap() {
         if(airport.totalflights > 10000) {
             airport.iconsize = new google.maps.Size(48,48);
         }
-        else if((1000 < airport.totalflights) && (airport.totalflights <= 10000)) {
+        else if((1000 <= airport.totalflights) && (airport.totalflights <= 10000)) {
             airport.iconsize = new google.maps.Size(32,32);
         }
-        else if(airport.totalflights <= 1000) {
+        else if(airport.totalflights < 1000) {
             airport.iconsize = new google.maps.Size(16,16);
         }
         else {
