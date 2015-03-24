@@ -25,12 +25,6 @@ function loadMap() {
 
     //Create the map
     map = new google.maps.Map(mapId,mapOptions);
-
-    //Update the URL with the current location
-    updateUrlLocation(map.getCenter(), map.getZoom());
-    
-    //Add the event listeners
-    mapEventListeners();
     
     //Loop through the airport data
     for (var i=0;i<airportData.length;i++) {
@@ -43,33 +37,11 @@ function loadMap() {
         //Total flights
         airport.totalflights = (airport.aop + airport.dop);
         
-        //Scale        
-        if(airport.totalflights > 10000) {
-            airport.iconsize = new google.maps.Size(48,48);
-        }
-        else if((1000 < airport.totalflights) && (airport.totalflights <= 10000)) {
-            airport.iconsize = new google.maps.Size(32,32);
-        }
-        else if(airport.totalflights <= 1000) {
-            airport.iconsize = new google.maps.Size(16,16);
-        }
-        else {
-            airport.scaleicon = 1;
-        }
+        //Set the icon color
+        airport.icon = 'green'; 
         
-        //Set the icon
-        if(airport.totalper >= 80) {
-            airport.icon = 'green';            
-        } 
-        else if((70 <= airport.totalper) && (airport.totalper < 80)) {
-            airport.icon = 'yellow';            
-        } 
-        else if((60 <= airport.totalper) && (airport.totalper < 70)) {
-            airport.icon = 'orange';
-        }
-        else {
-            airport.icon = 'red';
-        }
+        //Set the icon size
+        airport.iconsize = new google.maps.Size(32,32);
         
         //Add the marker to the map
         newMarker = addMarker(airport);
@@ -85,13 +57,13 @@ function loadMap() {
 }
 
 //Add a marker to the map
-function addMarker(obj) {
+function addMarker(airport) {
     
     //Create the marker (#MarkerOptions)    
     var marker = new google.maps.Marker({
         
         //Position of marker
-        position: new google.maps.LatLng(obj.lat,obj.lng),
+        position: new google.maps.LatLng(airport.lat,airport.lng),
         
         //Map
         map: map,                
@@ -100,10 +72,10 @@ function addMarker(obj) {
         icon: {
             
             //URL of the image
-            url: 'img/airplane-'+obj.icon+'.png',
+            url: 'img/airplane-green.png',
             
             //Sets the image size
-            size: obj.iconsize,
+            size: new google.maps.Size(32,32),
             
             //Sets the origin of the image (top left)
             origin: new google.maps.Point(0,0),
@@ -112,11 +84,11 @@ function addMarker(obj) {
             anchor: new google.maps.Point(16,32),
             
             //Scales the image
-            scaledSize: obj.iconsize
+            scaledSize: new google.maps.Size(32,32)
         },
                 
         //Sets the title when mouse hovers
-        title: obj.airport       
+        title: airport.airport       
                 
     });
     
@@ -159,34 +131,6 @@ function addInfoWindow(marker) {
         infoWindow.open(map,marker);
         
     });
-}
-
-// Add the map event listeners
-function mapEventListeners() {
-   
-    //Drag End
-    var listenerDragEnd = google.maps.event.addListener(map, 'dragend', 
-        function() {
-            updateUrlLocation(map.getCenter(), map.getZoom());
-        }
-    );
-
-    //Zoom changed
-    var listenerZoomChanged = google.maps.event.addListener(map, 'zoom_changed',
-        function() {
-            updateUrlLocation(map.getCenter(), map.getZoom());
-        }
-    );
-    
-}
-
-//Update the URL with the map center and zoom
-function updateUrlLocation(center, zoom) {
-    
-    var url = '?lat='+center.lat()+'&lon='+center.lng()+'&zoom='+zoom;   
-    
-    //Set the url
-    window.history.pushState({center: center, zoom: zoom }, 'map center', url);  
 }
 
 //Add Commas to number
