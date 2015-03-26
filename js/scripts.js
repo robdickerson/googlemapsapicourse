@@ -58,7 +58,7 @@ function addMarker() {
             //Scales the image
             scaledSize: new google.maps.Size(32,32)
         },
-        
+      
         //Set the animation (BOUNCE or DROP)
         animation: google.maps.Animation.DROP,
         
@@ -67,6 +67,9 @@ function addMarker() {
         
         //Drag marker
         draggable: true,
+        
+        //Set the cross underneath the draggable marker        
+        crossOnDrag: false,
         
         //Sets the opacity
         opacity: 1.0,
@@ -79,7 +82,6 @@ function addMarker() {
         
         //Sets the zIndex if multiple markers are displayed
         zIndex: 1
-        
         
     });
 
