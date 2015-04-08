@@ -85,7 +85,7 @@ function mapEventListeners() {
     );
     
     
-    var mouseDoubleClick = google.maps.event.addListener(map, 'rightclick',
+    var mouseRightClick = google.maps.event.addListener(map, 'rightclick',
         function(event) {
             
             //Get the map zoom and increment
