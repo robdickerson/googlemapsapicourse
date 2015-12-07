@@ -2216,9 +2216,9 @@ var airportData = [
     "dper": 68.5,
     "airport": "ONTARIO CA (ONT)",
     "aop": 1678,
-    "lat": 51.253775,
+    "lat": 34.0528,
     "dop": 1681,
-    "lng": -85.3232139
+    "lng": -117.6278
   },
   {
     "aper": 79.9,
